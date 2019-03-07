@@ -71,9 +71,7 @@ public class FixedSizeList<T> extends ListADT<T> {
 
 	@Override
 	public void addFront(T value) {
-		// TODO Start here. Do we have to write this?
-		// Or can we use addIndex somehow?
-		throw new TODOErr();		
+		addIndex(0, value);		
 	}
 
 	@Override

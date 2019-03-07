@@ -1,6 +1,7 @@
 package edu.smith.cs.csc212.adtr.real;
 
 import edu.smith.cs.csc212.adtr.ListADT;
+import edu.smith.cs.csc212.adtr.errors.BadIndexError;
 import edu.smith.cs.csc212.adtr.errors.TODOErr;
 
 public class GrowableList<T> extends ListADT<T> {
@@ -31,11 +32,12 @@ public class GrowableList<T> extends ListADT<T> {
 		checkExclusiveIndex(index);
 		
 		T removed = this.getIndex(index);
-		
-		// TODO: Now we need to slide everything to the left.
-		throw new TODOErr();
+		for (int j=index; j<this.size(); j++) {
+			array[j] = array[j + 1];
+		}
+		fill--;
 		// When we're done, give back the thing that we removed.
-		//return removed;
+		return removed;
 	}
 
 	@Override
@@ -55,7 +57,11 @@ public class GrowableList<T> extends ListADT<T> {
 	 * This private method is called when we need to make room in our GrowableList.
 	 */
 	private void resizeArray() {
-		throw new TODOErr();
+		Object[] array2 = new Object[this.size() * 2];
+		for (int i = 0; i < fill; i++) {
+			array2[i] = this.array[i];
+		}
+		this.array = array2;
 	}
 
 	@Override
@@ -110,7 +116,16 @@ public class GrowableList<T> extends ListADT<T> {
 
 	@Override
 	public void setIndex(int index, T value) {
-		throw new TODOErr();
+		this.checkNotEmpty();
+		if(index >= this.size()) {
+			throw new BadIndexError(index);
+		}
+		if(index >= 0) {
+			this.array[index] = value;
+		}
+		else {
+			throw new BadIndexError(index);
+		}
 	}
 
 }
