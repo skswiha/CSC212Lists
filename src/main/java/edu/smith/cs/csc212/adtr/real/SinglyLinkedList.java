@@ -13,31 +13,44 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 	
 	@Override
 	public T removeFront() {
-		return removeIndex(0);
+		T removed = this.getFront();
+		
+		this.start = this.start.next;
+		
+		return removed;
 	}
 
 	@Override
 	public T removeBack() {
-		return removeIndex(this.size() - 1);
+		T removed = this.getBack();
+		this.setIndex(this.size() - 1, null);
+		return removed;
 	}
 
 	@Override
 	public T removeIndex(int index) {
 		checkNotEmpty();
 		T removed = this.getIndex(index);
+		int at = 0;
+		for (Node<T> n = this.start; n.value != null; n = n.next) {
+			if (at == index - 1) {
+				n.next.value = this.getIndex(index + 1);
+			}
+			at++;
+		}
 		
 		return removed;
 	}
 
 	@Override
 	public void addFront(T item) {
-		this.start = new Node<T>(item, start);
+		this.start = new Node<T>(item, start);	
 	}
 
 	@Override
 	public void addBack(T item) {
-		if (this.size() > 1) {
-			addIndex(this.size() - 1, item);
+		if (this.size() > 0) {
+			addIndex(this.size(), item);
 		}
 		else {
 			this.start = new Node<T>(item, start);
@@ -50,15 +63,21 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 		if (index > this.size() || index < 0) {
 			throw new BadIndexError(index);
 		}
-		int at = 0;
-		for (Node<T> n = this.start; n != null; n = n.next) {
-			if (at == index) {
-				n.value = item;
-			}
-			if (at > index) {
-				n.value = n.next.value;
-			}
-			at++;
+		
+		if (index == 0) {
+			addFront(item);
+		}
+		else {
+		
+			int at = 0;
+			
+			for (Node<T> n = this.start; n.value != null; n = n.next) {
+				if (at == index - 1) {
+					Node<T> x = new Node<T>(item, n.next);
+					n.next = x;
+				}
+				at++;
+				}	
 		}
 	}
 	
@@ -92,9 +111,9 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 	@Override
 	public void setIndex(int index, T value) {
 		checkNotEmpty();
-		if (index >= this.size() || index < 0) {
+		if (index > this.size() - 1 || index < 0) {
 			throw new BadIndexError(index);
-		}
+		} 
 		int at = 0;
 		for (Node<T> n = this.start; n != null; n = n.next) {
 			if (at++ == index) {

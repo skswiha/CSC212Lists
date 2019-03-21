@@ -2,6 +2,7 @@ package edu.smith.cs.csc212.adtr.real;
 
 import edu.smith.cs.csc212.adtr.ListADT;
 import edu.smith.cs.csc212.adtr.errors.BadIndexError;
+import edu.smith.cs.csc212.adtr.errors.EmptyListError;
 import edu.smith.cs.csc212.adtr.errors.TODOErr;
 
 
@@ -21,24 +22,49 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T removeFront() {
 		checkNotEmpty();
-		throw new TODOErr();
+		T removed = start.value;
+		start = start.after;
+		start.before = null;
+		return removed;
 	}
 
 	@Override
 	public T removeBack() {
 		checkNotEmpty();
-		throw new TODOErr();
+		T removed = end.value;
+		end = end.before;
+		end.after = null;
+		return removed;
 	}
 
 	@Override
 	public T removeIndex(int index) {
 		checkNotEmpty();
-		throw new TODOErr();
+		T removed = this.getIndex(index);
+		int at = 0;
+		for (Node<T> n = start; n.value != null; n = n.after) {
+			if (at == index - 1) {
+				
+			}
+			if (at == index + 1) {
+				
+			}
+		at++;
+		}
+		return removed;
 	}
 
 	@Override
 	public void addFront(T item) {
-		throw new TODOErr();
+		if (start == null) {
+			start = end = new Node<T>(item);
+		} else {
+			Node<T> second = start;
+			start = new Node<T>(item);
+			start.before = null;
+			start.after = second;
+		}
+
 	}
 
 	@Override
@@ -55,36 +81,79 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addIndex(int index, T item) {
-		throw new TODOErr();
+		Node<T> toAdd = new Node<T>(item);
+		if (end == null) {
+			start = end = toAdd;
+		} else {
+			int at = 0;
+			for (Node<T> n = start; n.value != null; n = n.after) {
+				if (at == index -1) {
+					toAdd.before = n;
+					toAdd.after = n.after;
+					n.after = toAdd;
+				}
+			}
+			at++;
+		}
 	}
 
 	@Override
 	public T getFront() {
-		throw new TODOErr();
+		checkNotEmpty();
+		return start.value;
 	}
 
 	@Override
 	public T getBack() {
-		throw new TODOErr();
+		checkNotEmpty();
+		return end.value;
+		
 	}
 	
 	@Override
 	public T getIndex(int index) {
-		throw new TODOErr();
+		checkNotEmpty();
+		int at = 0;
+		for(Node<T> n = start; n != null; n = n.after) {
+			if (at == index) {
+				return n.value;
+			}
+			at++;
+		}
+		throw new BadIndexError(index);
 	}
 	
 	public void setIndex(int index, T value) {
-		throw new TODOErr();
+		checkNotEmpty();
+		if(index < 0 || index > this.size() - 1) {
+			throw new BadIndexError(index);
+		}
+		int at = 0;
+		for(Node<T> n = start; n != null; n = n.after) {
+			if (at == index) {
+				n.value = value;
+			}
+			at++;
+		}
 	}
 
 	@Override
 	public int size() {
-		throw new TODOErr();
+		int count = 0;
+		for(Node<T> n = start; n != null; n = n.after) {
+			count ++;
+		}
+		return count;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new TODOErr();
+		if (end != null && start != null) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	/**
