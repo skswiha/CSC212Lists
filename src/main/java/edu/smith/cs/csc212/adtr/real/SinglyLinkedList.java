@@ -22,19 +22,22 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public T removeBack() {
-		T removed = this.getBack();
-		this.setIndex(this.size() - 1, null);
-		return removed;
+		return this.removeIndex(this.size()-1);
 	}
 
 	@Override
 	public T removeIndex(int index) {
 		checkNotEmpty();
 		T removed = this.getIndex(index);
+		if (index == 0) {
+			return this.removeFront();
+		}
 		int at = 0;
-		for (Node<T> n = this.start; n.value != null; n = n.next) {
+		for (Node<T> n = this.start; n != null; n = n.next) {
 			if (at == index - 1) {
-				n.next.value = this.getIndex(index + 1);
+				removed = n.next.value;
+				n.next = n.next.next;
+				return removed;
 			}
 			at++;
 		}
@@ -70,14 +73,17 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 		else {
 		
 			int at = 0;
+			Node<T> x = null;
 			
-			for (Node<T> n = this.start; n.value != null; n = n.next) {
+			for (Node<T> n = this.start; n != null; n = n.next) {
 				if (at == index - 1) {
-					Node<T> x = new Node<T>(item, n.next);
+					x = new Node<T>(item, n.next);
 					n.next = x;
+					return;
 				}
-				at++;
-				}	
+				
+			at++;
+			}	
 		}
 	}
 	
@@ -92,7 +98,7 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T getBack() {
 		checkNotEmpty();
-		return getIndex(this.size() - 1);
+		return getIndex(this.size() -1);
 	}
 
 	@Override

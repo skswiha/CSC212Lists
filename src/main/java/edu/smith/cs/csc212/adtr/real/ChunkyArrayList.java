@@ -117,7 +117,18 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 	
 	@Override
 	public void setIndex(int index, T value) {
-		throw new TODOErr();
+		if (this.isEmpty()) {
+			throw new EmptyListError();
+		}
+		int start = 0;
+		for (FixedSizeList<T> chunk : this.chunks) {
+			int end = start + chunk.size();
+			if (start <= index && index < end) {
+				chunk.setIndex(index-start, value);
+			}
+			start = end;
+		}
+		throw new BadIndexError(index);
 	}
 
 	@Override

@@ -23,8 +23,16 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	public T removeFront() {
 		checkNotEmpty();
 		T removed = start.value;
-		start = start.after;
-		start.before = null;
+		Node<T> second = start.after;
+		if (second != null) {
+			start = second;
+			start.after = second.after;
+			start.before = null;
+		}
+		else {
+			start = null;
+			end = null;
+		}
 		return removed;
 	}
 
@@ -32,8 +40,16 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	public T removeBack() {
 		checkNotEmpty();
 		T removed = end.value;
-		end = end.before;
-		end.after = null;
+		Node<T> secondLast = end.before;
+		if (secondLast != null) {
+			end = secondLast;
+			end.before = secondLast.before;
+			end.after = null;
+		}
+		else {
+			end = null;
+			start = null;
+		}
 		return removed;
 	}
 
@@ -42,12 +58,16 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 		checkNotEmpty();
 		T removed = this.getIndex(index);
 		int at = 0;
-		for (Node<T> n = start; n.value != null; n = n.after) {
+		if (index == 0) {
+			return removeFront();
+		}
+		for (Node<T> n = start; n != null; n = n.after) {
 			if (at == index - 1) {
-				
+				n.after = n.after.after;
 			}
 			if (at == index + 1) {
-				
+				n.before = n.before.before;
+				return removed;
 			}
 		at++;
 		}
@@ -81,19 +101,32 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addIndex(int index, T item) {
-		Node<T> toAdd = new Node<T>(item);
+		Node<T> toAdd = null;
 		if (end == null) {
-			start = end = toAdd;
-		} else {
+			start = end = new Node<T>(item);
+		} 
+		else if (index > this.size() || index < 0) {
+			throw new BadIndexError(index);
+		}
+		else if (index == 0) {
+			this.addFront(item);
+		}
+		else {
 			int at = 0;
-			for (Node<T> n = start; n.value != null; n = n.after) {
+			for (Node<T> n = start; n != null; n = n.after) {
 				if (at == index -1) {
+					toAdd = new Node<T>(item);
 					toAdd.before = n;
 					toAdd.after = n.after;
 					n.after = toAdd;
 				}
+				if (at == index + 1) {
+					n.before = toAdd;
+					return;
+				}
+				at++;
 			}
-			at++;
+			end = toAdd;
 		}
 	}
 

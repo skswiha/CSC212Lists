@@ -164,8 +164,12 @@ public class SinglyLinkedListTest {
 		ListADT<Integer> items2 = makeEmptyList();
 		
 		// If this test runs forever, make sure removeIndex actually removes things.
+		int count = 0;
 		while(!items1.isEmpty()) {
 			int value = items1.removeIndex(rand.nextInt(items1.size()));
+			if (count++> 1000) {
+				throw new RuntimeException("too many times");
+			}
 			insertSorted(items2, value);
 		}
 		
