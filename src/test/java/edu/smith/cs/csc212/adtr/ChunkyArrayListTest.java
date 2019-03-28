@@ -143,6 +143,7 @@ public class ChunkyArrayListTest {
 	
 	private void insertSorted(ListADT<Integer> items, int num) {
 		for (int i=0; i<items.size(); i++) {
+			System.out.println(items);
 			if (items.getIndex(i) >= num) {
 				items.addIndex(i, num);
 				return;

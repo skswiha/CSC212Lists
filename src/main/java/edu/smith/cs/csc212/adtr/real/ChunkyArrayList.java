@@ -132,8 +132,8 @@ public class ChunkyArrayList<T> extends ListADT<T> {
 					// check can roll to next
 					// or need a new chunk
 					FixedSizeList<T> newChunk = makeChunk();
-					T saved = null;
-					T saved2 = null;
+					T saved = chunk.getFront();
+					T saved2 = chunk.getFront();
 					for(int i = 0; i < chunk.size(); i++) {
 						if (i == index - start) {
 							saved = chunk.getIndex(i);
